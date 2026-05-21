@@ -9,6 +9,7 @@ export default function LoginPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const message = searchParams.get("message");
+    const urlError = searchParams.get("error");
 
     const [form, setForm] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
@@ -43,6 +44,12 @@ export default function LoginPage() {
                 {message && (
                     <p className="text-sm text-green-600 bg-green-50 px-4 py-2 rounded-lg mb-4">
                         {message}
+                    </p>
+                )}
+
+                {urlError && (
+                    <p className="text-sm text-red-500 bg-red-50 px-4 py-2 rounded-lg mb-4">
+                        {urlError}
                     </p>
                 )}
 

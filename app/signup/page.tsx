@@ -47,7 +47,7 @@ export default function SignUpPage() {
             return;
         }
 
-        router.push("/login?message=Account created. Please log in.");
+        router.push("/login?message=Account created. Please check your email to verify your account.");
     };
 
     return (
@@ -115,19 +115,19 @@ export default function SignUpPage() {
                                 <div className="h-1.5 w-full bg-gray-200 rounded-full">
                                     <div
                                         className={`h-1.5 rounded-full transition-all duration-300 ${strength === "weak"
-                                                ? "w-1/3 bg-red-500"
-                                                : strength === "fair"
-                                                    ? "w-2/3 bg-yellow-500"
-                                                    : "w-full bg-green-500"
+                                            ? "w-1/3 bg-red-500"
+                                            : strength === "fair"
+                                                ? "w-2/3 bg-yellow-500"
+                                                : "w-full bg-green-500"
                                             }`}
                                     />
                                 </div>
                                 <p
                                     className={`text-xs mt-1 ${strength === "weak"
-                                            ? "text-red-500"
-                                            : strength === "fair"
-                                                ? "text-yellow-500"
-                                                : "text-green-500"
+                                        ? "text-red-500"
+                                        : strength === "fair"
+                                            ? "text-yellow-500"
+                                            : "text-green-500"
                                         }`}
                                 >
                                     {strength === "weak"

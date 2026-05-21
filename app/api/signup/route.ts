@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/app/lib/prisma";
+import { createVerificationToken } from "@/app/lib/tokens";
+import { sendVerificationEmail } from "@/app/lib/email";
 
 const signUpSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -19,11 +21,10 @@ export async function POST(request: Request) {
 
         const validation = signUpSchema.safeParse(body);
         if (!validation.success) {
-            const errorMessage = validation.error.issues[0]?.message ?? "Invalid input";
-            return NextResponse.json(
-                { error: errorMessage },
-                { status: 400 }
-            );
+            const errorMessage = validation.error
+                ? validation.error.issues[0].message
+                : "Invalid input";
+            return NextResponse.json({ error: errorMessage }, { status: 400 });
         }
 
         const { name, email, password } = validation.data;
@@ -41,7 +42,7 @@ export async function POST(request: Request) {
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        const user = await prisma.user.create({
+        await prisma.user.create({
             data: {
                 name,
                 email,
@@ -49,8 +50,11 @@ export async function POST(request: Request) {
             },
         });
 
+        const token = await createVerificationToken(email);
+        await sendVerificationEmail(email, token);
+
         return NextResponse.json(
-            { message: "Account created successfully", userId: user.id },
+            { message: "Account created. Please check your email to verify your account." },
             { status: 201 }
         );
     } catch (error) {
